@@ -50,29 +50,6 @@ public class HelloApplication  extends Application {
         }
     }
 
-    void deleteDir() throws IOException
-    {
-
-
-
-
-        Path path = FileSystems.getDefault().getPath("./src/main/Images");
-        try {
-            Files.deleteIfExists(path);
-        } catch (NoSuchFileException x) {
-            System.err.format("%s: no such" + " file or directory%n", path);
-        } catch (DirectoryNotEmptyException x) {
-            System.err.format("%s not empty%n", path);
-        } catch (IOException x) {
-            System.err.println(x);
-        }
-
-
-    }
-
-
-
-
 
 
 
@@ -86,11 +63,15 @@ public class HelloApplication  extends Application {
         TextField textField1 = new TextField();
         TextField textField2 = new TextField("Enter WebSite to LookUP");
         TextField textField3 = new TextField("https://i.pinimg.com/564x/e7/cd/95/e7cd9545ab2fce38bb5c8b49a529488a.jpg");
+        TextField textField4 = new TextField("Enter Directory Location");
         Label lb = new Label();
         Button btn2 = new Button("CREATE  DIR");
         Button btn3 = new Button("DELETE  DIR");
         Button btn4 = new Button("DISPLAY IMG");
         Button btn5 = new Button("DOWNLD  IMG");
+
+
+
 
         //creating label email
         Text text1 = new Text("WebSite");
@@ -105,7 +86,11 @@ public class HelloApplication  extends Application {
 
         Text text3 = new Text("URL");
         text3.setFill(Color.WHITE);
-        text3.setStyle("-fx-font-weight: bold;");
+        text3.setStyle("-fx-font-weight: bold;-fx-font-size: 16px");
+
+        Text text4 = new Text("DIR PATH");
+        text4.setFill(Color.WHITE);
+        text4.setStyle("-fx-font-weight: bold;-fx-font-size: 16px");
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -135,7 +120,7 @@ public class HelloApplication  extends Application {
         btn2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                File f = new File("./src/main/Images");
+                File f = new File(textField4.getText());
                 if (f.mkdir() == true) {
                     System.out.println("Directory has been created successfully");
                 }
@@ -150,16 +135,20 @@ public class HelloApplication  extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
 
-                File file = new File("./src/main/Images");
+                File file = new File(textField4.getText());
                 //List of all files and directories
                 deleteFiles(file);
                 System.out.println("Files deleted........");
 
+                Path path = FileSystems.getDefault().getPath(textField4.getText());
                 try {
-                    deleteDir();
-                }catch (IOException e)
-                {
-                    e.printStackTrace();
+                    Files.deleteIfExists(path);
+                } catch (NoSuchFileException x) {
+                    System.err.format("%s: no such" + " file or directory%n", path);
+                } catch (DirectoryNotEmptyException x) {
+                    System.err.format("%s not empty%n", path);
+                } catch (IOException x) {
+                    System.err.println(x);
                 }
             }
 
@@ -190,11 +179,13 @@ public class HelloApplication  extends Application {
         gridPane.add(textField1, 1, 1);
         gridPane.add(text3, 0, 2);
         gridPane.add(textField3, 1, 2);
-        gridPane.add(btn, 1, 3);
-        gridPane.add(btn2, 1, 4);
-        gridPane.add(btn3, 1, 5);
-        gridPane.add(btn4, 1, 6);
-        gridPane.add(btn5, 1, 7);
+        gridPane.add(text4, 0, 3);
+        gridPane.add(textField4, 1, 3);
+        gridPane.add(btn, 1, 4);
+        gridPane.add(btn2, 1, 5);
+        gridPane.add(btn3, 1, 6);
+        gridPane.add(btn4, 1, 7);
+        gridPane.add(btn5, 1, 8);
 
         gridPane.setStyle("-fx-background-image: url('https://img1.goodfon.com/wallpaper/nbig/2/44/metal-grunge-metallic-steel-5838.jpg'); " +
                 "-fx-background-repeat: no-repeat; " +
@@ -258,7 +249,7 @@ public class HelloApplication  extends Application {
             URL fetchWebsite = new URL(textField3.getText());
             ReadableByteChannel readableByteChannel = Channels.newChannel(fetchWebsite.openStream());
 
-            try (FileOutputStream fos = new FileOutputStream("./src/main/Images/Image1.jpg")) {
+            try (FileOutputStream fos = new FileOutputStream(textField4.getText()+"//Image.jpg")) {
                 fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                 System.out.println("Image has been Downloaded");
 
