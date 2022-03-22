@@ -1,6 +1,10 @@
 package com.example.fx;
 
-
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.*;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.io.File;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -20,9 +24,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.*;
 import java.util.Comparator;
 
@@ -84,6 +90,7 @@ public class HelloApplication  extends Application {
         Button btn2 = new Button("CREATE  DIR");
         Button btn3 = new Button("DELETE  DIR");
         Button btn4 = new Button("DISPLAY IMG");
+        Button btn5 = new Button("DOWNLD  IMG");
 
         //creating label email
         Text text1 = new Text("WebSite");
@@ -104,16 +111,21 @@ public class HelloApplication  extends Application {
             @Override
 
             public void handle(ActionEvent actionEvent) {
+
                 InetAddress address = null;
+                String IP1 = null;
                 try {
-                    address = InetAddress.getByName(textField2.getText());
+                    address = Inet4Address.getByName(textField2.getText());
+                    String temp = address.toString();
+                    IP1 = temp.substring(temp.indexOf("/") + 1, temp.length());
+
 
                 } catch (UnknownHostException ex) {
                     System.out.println(textField2.getText() + " not found");
                 }
                 primaryStage.setTitle("APP");
-                textField1.setText(address.toString());
-                lb.setText(address.toString());
+                textField1.setText(IP1);
+//                lb.setText(address.toString());
 
 
             }
@@ -182,16 +194,20 @@ public class HelloApplication  extends Application {
         gridPane.add(btn2, 1, 4);
         gridPane.add(btn3, 1, 5);
         gridPane.add(btn4, 1, 6);
+        gridPane.add(btn5, 1, 7);
 
-        gridPane.setStyle("-fx-background-image: url('https://wallpaperaccess.com/full/1808239.jpg'); " +
+        gridPane.setStyle("-fx-background-image: url('https://img1.goodfon.com/wallpaper/nbig/2/44/metal-grunge-metallic-steel-5838.jpg'); " +
                 "-fx-background-repeat: no-repeat; " +
                 "-fx-background-size: 500 500; " +
                 "-fx-background-position: center center");
 
         Scene scene1 = new Scene(gridPane);
 
+
         primaryStage.setTitle("APP");
         primaryStage.setScene(scene1);
+        Image icon = new Image("file:./src/main/java/NewBub.png");
+        primaryStage.getIcons().add(icon);
         primaryStage.show();
 
 
@@ -201,7 +217,7 @@ public class HelloApplication  extends Application {
             public void handle(ActionEvent actionEvent)  {
 
                 Button btn1 = new Button("GO-BACK");
-//                    InputStream stream = new FileInputStream("C:\\Users\\bublikstudios\\Pictures\\falmingo.jpg");
+//              InputStream stream = new FileInputStream("C:\\Users\\bublikstudios\\Pictures\\falmingo.jpg");
                 String path ="https://i.pinimg.com/564x/e7/cd/95/e7cd9545ab2fce38bb5c8b49a529488a.jpg";
 
                 String path2 = textField3.getText();
@@ -219,7 +235,7 @@ public class HelloApplication  extends Application {
                 //Setting the Scene object
                 btn1.setAlignment(Pos.BOTTOM_CENTER);
                 btn1.setLayoutY(750);
-                btn1.setLayoutX(250);
+                btn1.setLayoutX(280);
                 btn1.setOnAction(e -> primaryStage.setScene(scene1));
 
                 btn1.setAlignment(Pos.BOTTOM_CENTER);
@@ -235,6 +251,27 @@ public class HelloApplication  extends Application {
         });
 
 
+        btn5.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+        try {
+            URL fetchWebsite = new URL(textField3.getText());
+            ReadableByteChannel readableByteChannel = Channels.newChannel(fetchWebsite.openStream());
+
+            try (FileOutputStream fos = new FileOutputStream("./src/main/Images/Image1.jpg")) {
+                fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+                System.out.println("Image has been Downloaded");
+
+            }
+
+
+        }catch (IOException e)
+        {
+            System.out.println("Cannot Download....");
+            e.printStackTrace();}
+            }
+
+        });
 
 
 
@@ -245,18 +282,3 @@ public class HelloApplication  extends Application {
 
 }
 
-
-//        btn.setLayoutY(110);
-//        btn.setLayoutX(120);
-//
-//        textField2.setLayoutY(150);
-//        textField2.setLayoutX(10);
-//        textField2.setMinWidth(280);
-//
-//
-//        textField.setLayoutY(250);
-//        textField.setMinWidth(280);
-//        textField.setLayoutX(10);
-//
-//        lb.setLayoutY(300);
-//        lb.setLayoutX(60);
