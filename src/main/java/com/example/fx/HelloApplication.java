@@ -1,9 +1,10 @@
 package com.example.fx;
 
+
+import java.io.File;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -15,25 +16,60 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.*;
-import java.net.InetAddress;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.nio.file.Paths;
-import java.util.Scanner;
 
-public class HelloApplication  extends Application{
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.file.*;
+import java.util.Comparator;
+
+public class HelloApplication  extends Application {
     public static void main(String[] args) {
         launch(args);
 
+
     }
+
+    void deleteFiles(File dirPath) {
+        File filesList[] = dirPath.listFiles();
+        for(File file : filesList) {
+            if(file.isFile()) {
+                file.delete();
+            } else {
+                deleteFiles(file);
+            }
+        }
+    }
+
+    void deleteDir() throws IOException
+    {
+
+
+
+
+        Path path = FileSystems.getDefault().getPath("./src/main/Images");
+        try {
+            Files.deleteIfExists(path);
+        } catch (NoSuchFileException x) {
+            System.err.format("%s: no such" + " file or directory%n", path);
+        } catch (DirectoryNotEmptyException x) {
+            System.err.format("%s not empty%n", path);
+        } catch (IOException x) {
+            System.err.println(x);
+        }
+
+
+    }
+
+
+
+
+
+
+
 
     @Override
     public void start(Stage primaryStage) throws  Exception
@@ -43,7 +79,7 @@ public class HelloApplication  extends Application{
         Button btn = new Button("SUBMIT");
         TextField textField1 = new TextField();
         TextField textField2 = new TextField("Enter WebSite to LookUP");
-        TextField textField3 = new TextField("URL OF IMAGE");
+        TextField textField3 = new TextField("https://i.pinimg.com/564x/e7/cd/95/e7cd9545ab2fce38bb5c8b49a529488a.jpg");
         Label lb = new Label();
         Button btn2 = new Button("CREATE  DIR");
         Button btn3 = new Button("DELETE  DIR");
@@ -51,12 +87,18 @@ public class HelloApplication  extends Application{
 
         //creating label email
         Text text1 = new Text("WebSite");
+        text1.setFill(Color.WHITE);
+        text1.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 16px");
+
 
         //creating label password
         Text text2 = new Text("IPAddress");
+        text2.setStyle("-fx-font-weight: bold; -fx-font-size: 16px");
+        text2.setFill(Color.WHITE);
 
         Text text3 = new Text("URL");
-
+        text3.setFill(Color.WHITE);
+        text3.setStyle("-fx-font-weight: bold;");
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -69,7 +111,7 @@ public class HelloApplication  extends Application{
                 } catch (UnknownHostException ex) {
                     System.out.println(textField2.getText() + " not found");
                 }
-
+                primaryStage.setTitle("APP");
                 textField1.setText(address.toString());
                 lb.setText(address.toString());
 
@@ -95,14 +137,21 @@ public class HelloApplication  extends Application{
         btn3.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                File f = new File("./src/main/Images");
-                if (f.delete() == true) {
-                    System.out.println("Directory has been deleted successfully");
-                }
-                else {
-                    System.out.println("Directory cannot be deleted");
+
+                File file = new File("./src/main/Images");
+                //List of all files and directories
+                deleteFiles(file);
+                System.out.println("Files deleted........");
+
+                try {
+                    deleteDir();
+                }catch (IOException e)
+                {
+                    e.printStackTrace();
                 }
             }
+
+
 
         });
 
@@ -111,7 +160,7 @@ public class HelloApplication  extends Application{
         Group g = new Group();
         Pane pane = new Pane();
         GridPane gridPane = new GridPane();
-        gridPane.setMinSize(400, 200);
+        gridPane.setMinSize(400, 500);
 
         //Setting the padding
         gridPane.setPadding(new Insets(10, 10, 10, 10));
@@ -133,6 +182,11 @@ public class HelloApplication  extends Application{
         gridPane.add(btn2, 1, 4);
         gridPane.add(btn3, 1, 5);
         gridPane.add(btn4, 1, 6);
+
+        gridPane.setStyle("-fx-background-image: url('https://wallpaperaccess.com/full/1808239.jpg'); " +
+                "-fx-background-repeat: no-repeat; " +
+                "-fx-background-size: 500 500; " +
+                "-fx-background-position: center center");
 
         Scene scene1 = new Scene(gridPane);
 
