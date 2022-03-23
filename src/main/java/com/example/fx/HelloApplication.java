@@ -34,7 +34,7 @@ import java.util.Comparator;
 
 public class HelloApplication  extends Application {
     public static void main(String[] args) {
-        launch(args);
+        launch();
 
 
     }
@@ -197,7 +197,7 @@ public class HelloApplication  extends Application {
 
         primaryStage.setTitle("APP");
         primaryStage.setScene(scene1);
-        Image icon = new Image("file:./src/main/java/NewBub.png");
+        Image icon = new Image("file:./src/main/java/img/NewBub.png");
         primaryStage.getIcons().add(icon);
         primaryStage.show();
 
